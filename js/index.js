@@ -1,3 +1,5 @@
+import * as dna from 'dnaviz'
+
 import("../pkg/index.js").then(module => {
     function randomSeq(length) {
         var result = '';
@@ -15,7 +17,16 @@ import("../pkg/index.js").then(module => {
         let then = new Date();
         module.squiggle(seq);
         let now = new Date();
-        console.log((now.getTime() - then.getTime()) / 1000);
+        console.log((now.getTime() - then.getTime()) / 1000 + ' wasm-rust');
+        j++;
+    }
+
+    j = 0
+    while (j < 20) {
+        let then = new Date();
+        dna.squiggle(seq);
+        let now = new Date();
+        console.log((now.getTime() - then.getTime()) / 1000 + ' typescript');
         j++;
     }
 })

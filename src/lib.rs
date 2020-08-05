@@ -4,8 +4,8 @@ use wasm_bindgen::prelude::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 #[wasm_bindgen]
 pub fn squiggle(seq: &str) -> JsValue {
-    let mut x: Vec<f32> = vec![0.0];
-    let mut y: Vec<f32> = vec![0.0];
+    let mut x: Vec<f32> = vec![0.0; seq.len()];
+    let mut y: Vec<f32> = vec![0.0; seq.len()];
     let mut y_coord: f32 = 0.0;
     for character in seq.chars() {
         x.push(x[x.len() - 1] + 0.5);

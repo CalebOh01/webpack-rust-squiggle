@@ -16,6 +16,7 @@
     "rimraf": "^3.0.0"
   },
   "dependencies": {
+    "benchmark": "^2.1.4",
     "dnaviz": "^1.0.0-0",
     "simple-statistics": "^7.1.0"
   }
