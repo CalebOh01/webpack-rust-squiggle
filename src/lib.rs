@@ -1,40 +1,43 @@
 use wasm_bindgen::prelude::*;
+use js_sys::Array;
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 #[wasm_bindgen]
-pub fn squiggle(seq: &str) -> JsValue {
-    let mut x: Vec<f32> = vec![0.0; seq.len()];
-    let mut y: Vec<f32> = vec![0.0; seq.len()];
+pub fn squiggle(seq: &str) -> Array {
+    let mut ptr = vec![0.0; 4 * (seq.len()) + 2];
+    let mut x_coord: f32 = 0.0;
     let mut y_coord: f32 = 0.0;
-    for character in seq.chars() {
-        x.push(x[x.len() - 1] + 0.5);
-        x.push(x[x.len() - 1] + 0.5);
+    
+    for (i, character) in seq.chars().enumerate() {
+        ptr[i * 2 + 1] = x_coord + 0.5;
+        ptr[i * 2 + 2] = x_coord + 1.0;
+        x_coord += 1.0;
         match character {
             'A' => {
-                y.push(y_coord + 0.5);
-                y.push(y_coord);
+                ptr[2 * (seq.len() + 1 + i)] = y_coord + 0.5;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
             }
             'C' => {
-                y.push(y_coord - 0.5);
-                y.push(y_coord);
+                ptr[2 * (seq.len() + 1 + i)] = y_coord - 0.5;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
             }
             'T' | 'U' => {
-                y.push(y_coord - 0.5);
-                y.push(y_coord - 1.0);
+                ptr[2 * (seq.len() + 1 + i)] = y_coord - 0.5;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord - 1.0;
                 y_coord -= 1.0;
             }
             'G' => {
-                y.push(y_coord + 0.5);
-                y.push(y_coord + 1.0);
+                ptr[2 * (seq.len() + 1 + i)] = y_coord + 0.5;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord + 1.0;
                 y_coord += 1.0;
             }
             _ => {
-                y.push(y_coord);
-                y.push(y_coord);
+                ptr[2 * (seq.len() + 1 + i)] = y_coord;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
             }
         }
     }
-    let result: Vec<Vec<f32>> = vec![x, y];
-    JsValue::from_serde(&result).unwrap()
+    let result: Array = ptr.into_iter().map(JsValue::from).collect();
+    result
 }

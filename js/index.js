@@ -1,4 +1,4 @@
-import * as dna from 'dnaviz'
+import * as dna from 'dnaviz';
 
 import("../pkg/index.js").then(module => {
     function randomSeq(length) {
