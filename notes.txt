@@ -1,0 +1,135 @@
+#[wasm_bindgen]
+pub fn squiggle(seq: &str) -> Array {
+    let mut ptr = vec![0.0; 4 * (seq.len()) + 2];
+    let mut x_coord: f32 = 0.0;
+    let mut y_coord: f32 = 0.0;
+    for (i, character) in seq.chars().enumerate() {
+        ptr[i * 2 + 1] = x_coord + 0.5;
+        ptr[i * 2 + 2] = x_coord + 1.0;
+        x_coord += 1.0;
+        match character {
+            'A' => {
+                ptr[2 * (seq.len() + 1 + i)] = y_coord + 0.5;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
+            }
+            'C' => {
+                ptr[2 * (seq.len() + 1 + i)] = y_coord - 0.5;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
+            }
+            'T' | 'U' => {
+                ptr[2 * (seq.len() + 1 + i)] = y_coord - 0.5;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord - 1.0;
+                y_coord -= 1.0;
+            }
+            'G' => {
+                ptr[2 * (seq.len() + 1 + i)] = y_coord + 0.5;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord + 1.0;
+                y_coord += 1.0;
+            }
+            _ => {
+                ptr[2 * (seq.len() + 1 + i)] = y_coord;
+                ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
+            }
+        }
+    }
+    let result: Array = ptr.into_iter().map(JsValue::from).collect();
+    result
+}
+
+#[wasm_bindgen]
+pub fn store_x_val(len: usize) {
+    let mut x_coord: f32 = 0.0;
+    unsafe {
+        for i in 1..len {
+            WASM_MEMORY_BUFFER[2 * i + 1] = x_coord + 0.5;
+            WASM_MEMORY_BUFFER[2 * i + 2] = x_coord + 1.0;
+            x_coord += 1.0;
+        }
+    }
+}
+
+#[wasm_bindgen]
+pub fn store_y_val(base: char) {
+    match base {
+        'A' => {
+            ptr[2 * (seq.len() + 1 + i) = y_coord + 0.5;
+            ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
+        }
+        'C' => {
+            ptr[2 * (seq.len() + 1 + i)] = y_coord - 0.5;
+            ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
+        }
+        'T' | 'U' => {
+            ptr[2 * (seq.len() + 1 + i)] = y_coord - 0.5;
+            ptr[2 * (seq.len() + 1 + i) + 1] = y_coord - 1.0;
+            y_coord -= 1.0;
+        }
+        'G' => {
+            ptr[2 * (seq.len() + 1 + i)] = y_coord + 0.5;
+            ptr[2 * (seq.len() + 1 + i) + 1] = y_coord + 1.0;
+            y_coord += 1.0;
+        }
+        _ => {
+            ptr[2 * (seq.len() + 1 + i)] = y_coord;
+            ptr[2 * (seq.len() + 1 + i) + 1] = y_coord;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function randomSeq(length) {
+        var result = '';
+        var characters = 'ATGC';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    let seq = randomSeq(1000000);
+    let j = 0
+    while (j < 20) {
+        let then = new Date();
+        module.squiggle(seq);
+        let now = new Date();
+        console.log((now.getTime() - then.getTime()) / 1000 + ' wasm-rust');
+        j++;
+    }
+
+    j = 0
+    while (j < 20) {
+        let then = new Date();
+        dna.squiggle(seq);
+        let now = new Date();
+        console.log((now.getTime() - then.getTime()) / 1000 + ' typescript');
+        j++;
+    }

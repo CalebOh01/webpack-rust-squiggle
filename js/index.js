@@ -1,32 +1,31 @@
-import * as dna from 'dnaviz';
+// import * as dna from 'dnaviz';
+import init from "./pkg/index.js"
 
-import("../pkg/index.js").then(module => {
-    function randomSeq(length) {
-        var result = '';
-        var characters = 'ATGC';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    }
+// import("../pkg/index.js").then(rustWasm => {
 
-    let seq = randomSeq(1000000);
-    let j = 0
-    while (j < 20) {
-        let then = new Date();
-        module.squiggle(seq);
-        let now = new Date();
-        console.log((now.getTime() - then.getTime()) / 1000 + ' wasm-rust');
-        j++;
-    }
+//     console.log("Write in JS, Read in Wasm, Index 0:");
+  
+//     rustWasm.transform('ATGC');
+  
+//     let wasmMemory = new Float32Array(rustWasm.memory.buffer);
+  
+//     let bufferPointer = rustWasm.get_wasm_memory_buffer_pointer();
+  
+//     console.log(wasmMemory[bufferPointer + 0]);
 
-    j = 0
-    while (j < 20) {
-        let then = new Date();
-        dna.squiggle(seq);
-        let now = new Date();
-        console.log((now.getTime() - then.getTime()) / 1000 + ' typescript');
-        j++;
-    }
-})
+// })
+
+const runWasm = async () => {
+
+    const rustWasm = await init("./pkg/index_bg.wasm");
+  
+    rustWasm.transform('ATGC');
+  
+    let wasmMemory = new Float32Array(rustWasm.memory.buffer);
+  
+    let bufferPointer = rustWasm.get_wasm_memory_buffer_pointer();
+  
+    console.log(wasmMemory[bufferPointer + 0]);
+
+  };
+  runWasm();

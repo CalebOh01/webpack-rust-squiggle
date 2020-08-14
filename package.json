@@ -6,7 +6,7 @@
     "build": "rimraf dist pkg && webpack",
     "start": "rimraf dist pkg && webpack-dev-server --open -d",
     "test": "cargo test && wasm-pack test --headless",
-    "full": "npm run build && cd dist/ && npx light-server -s ."
+    "full": "wasm-pack build --target web && npm run build && cd dist/ && npx light-server -s ."
   },
   "devDependencies": {
     "@wasm-tool/wasm-pack-plugin": "^1.1.0",
